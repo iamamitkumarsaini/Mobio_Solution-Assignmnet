@@ -148,17 +148,8 @@ const getProductsData = (page,search,sort) => (dispatch) => {
 
     dispatch(getProductsDataRequest());
 
-    return axios.get(`http://localhost:8090/products?page=${page}&sort=${sort}&search=${search}`
-    // {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       authentication: `Bearer ${JSON.parse(localStorage.getItem("mobioToken"))}`
-    //     }
-        
-    // }
-    )
+    return axios.get(`https://mobio-solution.onrender.com/products?page=${page}&sort=${sort}&search=${search}`)
     .then((res) => {
-        console.log("Get data", res.data)
         dispatch(getProductsDataSuccess(res.data.products));
         dispatch(getTotalCountSuccess(res.data.totalCount));
         })
@@ -173,7 +164,7 @@ const postAddToCartData = (payload) => (dispatch) => {
 
     dispatch(postAddToCartRequest());
 
-    return axios.post(`http://localhost:8090/add/cart`,payload,{
+    return axios.post(`https://mobio-solution.onrender.com/add/cart`,payload,{
         headers: {
           'Content-Type': 'application/json',
           authentication: `Bearer ${JSON.parse(localStorage.getItem("mobioToken"))}`
@@ -193,7 +184,7 @@ const getUserCartData = () => (dispatch) => {
 
     dispatch(getUserCartDataRequest());
 
-    return axios.get(`http://localhost:8090/get/user/cart`,{
+    return axios.get(`https://mobio-solution.onrender.com/get/user/cart`,{
         headers: {
             'Content-Type': 'application/json',
             authentication: `Bearer ${JSON.parse(localStorage.getItem("mobioToken"))}`
@@ -218,7 +209,7 @@ const updateCartData = (id,payload) => (dispatch) => {
 
     dispatch(patchCartDataRequest());
 
-    return axios.patch(`http://localhost:8090/update/cart/${id}`,payload,{
+    return axios.patch(`https://mobio-solution.onrender.com/update/cart/${id}`,payload,{
         headers: {
             'Content-Type': 'application/json',
             authentication: `Bearer ${JSON.parse(localStorage.getItem("mobioToken"))}`
@@ -238,7 +229,7 @@ const removeDataFromCart = (id) => (dispatch) => {
 
     dispatch(emptyCartDataRequest());
 
-    return axios.delete(`http://localhost:8090/delete/cart/${id}`,{
+    return axios.delete(`https://mobio-solution.onrender.com/delete/cart/${id}`,{
         headers: {
             'Content-Type': 'application/json',
             authentication: `Bearer ${JSON.parse(localStorage.getItem("mobioToken"))}`
@@ -258,18 +249,16 @@ const removeDataFromCart = (id) => (dispatch) => {
 
 
 
-const deleteCartData = () => (dispatch) => {
+const deleteCartData = (id) => (dispatch) => {
 
     dispatch(deleteCartDataRequest());
 
-    return axios.get(`http://localhost:8090/deletecart`, 
-    // {
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //         authentication: `Bearer ${JSON.parse(localStorage.getItem("token"))}`
-    //     }
-    // }
-    )
+    return axios.delete(`https://mobio-solution.onrender.com/place/order/${id}`,{
+        headers: {
+            'Content-Type': 'application/json',
+            authentication: `Bearer ${JSON.parse(localStorage.getItem("mobioToken"))}`
+        }
+    })
     .then((res) => {
         return dispatch(deleteCartDataSuccess([res.data]));
     })

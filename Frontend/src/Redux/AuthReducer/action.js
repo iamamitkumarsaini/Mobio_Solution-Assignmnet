@@ -59,7 +59,7 @@ const postsignupUser = (payload) => (dispatch) => {
 
     dispatch(postSignupRequest());
 
-    return axios.post(`http://localhost:8090/signup`,payload)
+    return axios.post(`https://mobio-solution.onrender.com/signup`,payload)
     .then((res) => {
         return dispatch(postSignupSuccess([res.data]));
     })
@@ -75,9 +75,8 @@ const postLoginUser = (payload) => (dispatch) => {
 
     dispatch(postLoginRequest());
 
-    return axios.post(`http://localhost:8090/login`,payload)
+    return axios.post(`https://mobio-solution.onrender.com/login`,payload)
     .then((res) => {
-        console.log("LOgin Data",res.data.user)
         localStorage.setItem("mobioToken",JSON.stringify(res.data.token))
         localStorage.setItem("userData",JSON.stringify(res.data.user))
         return dispatch(postLoginSuccess([res.data]));
