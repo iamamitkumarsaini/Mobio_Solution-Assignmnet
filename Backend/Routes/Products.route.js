@@ -1,8 +1,14 @@
 const express = require("express");
 const { ProductsModel } = require("../Model/Product.model");
 
+// Creating an instance of the Express Router
 const productsRoute = express.Router();
 
+
+// Route for adding products. If a seller wants to add new products.
+// METHOD: POST
+// Request Object expects all necessary products Details
+// Response: Send a response with a message that Product is added to database.
 productsRoute.post("/add/products", async (req, res) => {
   const payload = req.body;
 
@@ -16,6 +22,11 @@ productsRoute.post("/add/products", async (req, res) => {
   }
 });
 
+
+// Route for retrieving products
+// METHOD: GET
+// Send all the products with pagination and has default limit of 12 items per page
+// Also used Aggregation pipeline for searching and sorting functionality
 productsRoute.get("/products", async (req, res) => {
   try {
     const { page = 1, search = "", sort = "" } = req.query;
@@ -23,6 +34,7 @@ productsRoute.get("/products", async (req, res) => {
     const pipeline = [];
 
     if (search) {
+      // using Regular Expression for searching a product from database with $match query.
       const searchStage = {
         $match: {
           $or: [
@@ -38,6 +50,7 @@ productsRoute.get("/products", async (req, res) => {
     }
 
     if (sort) {
+      // sorting all the products according to the sort variable's value.
       const sortStage = {
         $sort: { [sort]: 1 },
       };
@@ -47,9 +60,11 @@ productsRoute.get("/products", async (req, res) => {
     const totalCountPipeline = [...pipeline];
     totalCountPipeline.push({ $count: "totalCount" });
 
+    // Applying pagination and limit per page functionality.
     pipeline.push({ $skip: (page - 1) * 10 }, { $limit: 12 });
 
     const [products, totalCount] = await Promise.all([
+      // using aggregate method from mongodb
       ProductsModel.aggregate(pipeline),
       ProductsModel.aggregate(totalCountPipeline),
     ]);
